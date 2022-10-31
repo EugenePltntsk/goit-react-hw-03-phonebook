@@ -5,6 +5,8 @@ import { nanoid } from 'nanoid';
 import { Component } from 'react';
 import { PhonebookTitle, Wrapper } from './App.styled';
 
+const LOCAL_KEY = 'contacts';
+
 export class App extends Component {
   state = {
     contacts: [
@@ -15,6 +17,23 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const contactsData = localStorage.getItem(LOCAL_KEY);
+    if (contactsData) {
+      const parsedContacts = JSON.parse(contactsData);
+
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(this.state.contacts));
+    }
+  }
+
 
   deleteContactFromState = e => {
     this.setState({
